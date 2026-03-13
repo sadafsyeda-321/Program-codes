@@ -9,6 +9,7 @@ main(){
     cin>> n;
     ones =n%10;
     tens =n/10;
+    if(n>=20 && n<=99){
      if (tens==1){
         cout<<"Ten ";
     }
@@ -63,4 +64,5 @@ main(){
     if (ones==9){
         cout<<"Nine ";
     }
+}
 }
