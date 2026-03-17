@@ -13,23 +13,35 @@ cout<<"5. Clear screen" <<endl;
 cout<<"6. Exit" <<endl;
 cout<<"Enter your choice(1-6): ";
 cin>>select;
+if(select==1){
 cout<<"Enter first number: ";
 cin>>num_1;
 cout<<"Enter second number: ";
 cin>>num_2;
-if(select==1){
 result=num_1+num_2;
 cout<<"Result: "<< result <<endl;
 }
 else if(select==2){
+cout<<"Enter first number: ";
+cin>>num_1;
+cout<<"Enter second number: ";
+cin>>num_2;
 result=num_1-num_2;
 cout<<"Result: "<< result <<endl;
 }
 else if(select==3){
+cout<<"Enter first number: ";
+cin>>num_1;
+cout<<"Enter second number: ";
+cin>>num_2;
 result=num_1*num_2;
 cout<<"Result: "<< result <<endl;
 }
 else if(select==4){
+cout<<"Enter first number: ";
+cin>>num_1;
+cout<<"Enter second number: ";
+cin>>num_2;
 result=num_1/num_2;
 cout<<"Result: "<< result <<endl;
 }
