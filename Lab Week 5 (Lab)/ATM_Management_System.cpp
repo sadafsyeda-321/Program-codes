@@ -2,7 +2,8 @@
 using namespace std;
 main(){
     string pin;
-    int balance, deposit_money, money_withdrawn ;
+    int balance=10000;
+    int deposit_money, money_withdrawn ;
     int choice, amount, money;
     for (int i= 1; i<=3; i++)
     {
@@ -20,10 +21,9 @@ main(){
         if (i==3 && !(pin=="1234"))
         {
             cout<< "Too many attempts. Program ends."<<endl;
-            return 0;
         }
     }
-        for (int i=1;i<=4; i++)
+        for (int j=1;j<=4; j++)
     {
         cout<< endl<<"---- ATM Menu ----"<<endl;
         cout<< "1. Check balance "<<endl;
@@ -35,21 +35,20 @@ main(){
         cin>>choice;
         if(choice==1)
         {
-            cout<< "Current Balance: ";
-            cin>>balance;
+            cout<< "Current Balance: " <<balance;
             cout<<" Balance Checked Successfully "<<endl;
         }
         else if (choice==2)
         {
-            cout<<" Deposited Money: ";
+            cout<<"Deposited Money: ";
             cin>>deposit_money;
             balance= balance+deposit_money;
             cout<<"Money Deposited Successfully.";
-            cout<< "Total money= " <<balance<<endl;
+            cout<<"Total money= " <<balance<<endl;
             }
             else if(choice==3)
             {
-                cout<< "Amount: ";
+                cout<<"Amount: ";
                 cin>>money_withdrawn;
                 if (money_withdrawn > 0 && money_withdrawn<=balance)
                 {
@@ -62,8 +61,11 @@ main(){
             }
             else if(choice ==4)
             {
-                cout<<"Program Exit "<<endl;
+                cout<<"Program Ended "<<endl;
                 break;
+            }
+            else if (choice>4){
+                cout<<"Invalid choice"<<endl;
             }
     }
 }
