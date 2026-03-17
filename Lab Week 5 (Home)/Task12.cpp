@@ -15,10 +15,10 @@ cin>>Choice;
 if(Choice==1){
 cout<<"Enter the name of the book: ";
 cin>>Book_name;
-cout<<"You have added a book: "<<Book_name;
+cout<<"You have added a book: "<<Book_name ;
 }
 else if(Choice==2){
-cout<<"Books to be viewed: "<<Book_name;
+cout<<"Books to be viewed: "<<Book_name ;
 }
 else if(Choice==3){
 cout<<"Book to be borrowed: ";
