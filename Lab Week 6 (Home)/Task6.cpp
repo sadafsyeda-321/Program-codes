@@ -1,32 +1,33 @@
 #include<iostream>
 using namespace std;
 main(){
-    string name[100];
     int n;
     string order;
     cout<<"Enter the number of students: ";
     cin>>n;
+    cout<<"Enter names of "<< n << " students: \n";
+    string pupil[n];
     for (int i = 0; i < n; i++)
     {
-        cin>>name[i];
+        getline (cin, pupil[i]);
     }
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n-1; i++)
     {
-        for (int j = i+1 ; j < n; i++)
+        for (int j = 0 ; j < n-i-1 ; i++)
         {
-            if(name[i] > name[j])
+            if(pupil[j] > pupil[j+1])
             {
-                //Swap names
-                string swap=name[i];
-                name[i] = name[j];
-                name[j] = swap;
+                
+                string order=pupil[j];
+                pupil[j] = pupil[j+1];
+                pupil[j+1] = order;
             }
         }
         
     }
-    
+    cout<<endl;
     cout<<"Students in alphabetical order: \n";
     for(int i=0; i<n; i++){
-        cout<<name[i] <<endl;
+        cout<<pupil[i] <<endl;
     }
     }

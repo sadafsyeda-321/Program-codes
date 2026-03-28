@@ -3,120 +3,81 @@ using namespace std;
 
 int main()
 {
-    int n = 0;
-    string book[100];
-    bool borrowed[100] = {false};
-    string name;
-
+    string books[100];
+    bool borrowed=false;
+    int Count=0;
+    int choice;
     while(true)
     {
-        cout<<"\nLIBRARY MANAGEMENT SYSTEM\n";
-        cout<<"1. ADD BOOKS\n";
-        cout<<"2. VIEW BOOKS\n";
-        cout<<"3. BORROW BOOKS\n";
-        cout<<"4. RETURN BOOKS\n";
-        cout<<"5. EXIT\n";
+        cout<<"\n ------------LIBRARY MANAGEMENT SYSTEM--------------- \n";
+        cout<<"1. Add Books\n";
+        cout<<"2. View Books\n";
+        cout<<"3. Borrow Books\n";
+        cout<<"4. Exit\n";
 
-        int choice;
         cout<<"Enter the choice: ";
         cin >> choice;
-
         if(choice==1)
         {
-            cout<<"How many books you want to enter: ";
-            cin >> n;
-
-            cout<<"Enter names of "<< n <<" books:\n";
-            for(int i=0 ; i < n ; i++)
+        if (Count<100)
+        {
+            
+            cout<<"Enter the name of the book:\n";
+            cin.ignore();
+            getline(cin, books[Count] );
+            Count++;
+            cout<<"Book added! \n";
+        }
+        else{
+            cout<<"Library is full. "<<endl;
+        }
+    }
+        else if (choice==2)
+        {
+            if (Count==0)
             {
-                getline(cin, book[i]);
-                borrowed[i] = false;
+                cout<<"No books yet. " <<endl;
+            }
+            else {
+                cout<<"Books in library: "<<endl;
+                for (int i = 0; i < Count; i++)
+            
+                    cout<<i+1 << ". " << books[i] <<endl;
+                
             }
         }
         
-        else if(choice==2)
-        {
-            if(n==0)
+        else if (choice==3){
+            if (Count == 0)
             {
-                cout<<"No books added yet\n";
-                continue;
+                cout<<"No books to borrow. "<<endl;
             }
+            else{
+                cout<<"Available Books: \n";
+                for (int i=0; i<Count;i++)
+                    cout<<i+1 <<". " << books[i] <<endl;
+                
+                int num;
+                cout<<"Select book: ";
+                cin>>num;
 
-            cout<<"Books in library:\n";
-            for(int i=0; i<n; i++)
-            {
-                cout<<book[i];
-
-                if(borrowed[i])
-                    cout<<" (Borrowed)";
+                if (num>=1 && num<=Count)
+                {
+                    cout<<"You borrowed: "<<books[num-1]<<endl;
+                    for (int i = num -1; i < Count-1; i++)
+                    {
+                        books[i]=books[i+1];
+                    }
+                    Count--;
+                }
                 else
-                    cout<<" (Available)";
-
-                cout<<endl;
-            }
-        }
-
-        else if(choice==3)
-        {
-            cout<<"Enter book name to borrow: ";
-            cin.ignore();
-            getline(cin, name);
-
-            bool found=false;
-
-            for(int i=0 ; i< n ; i++)
-            {
-                if(book[i]==name)
                 {
-                    if(borrowed[i])
-                    {
-                        cout<<"Book already borrowed\n";
-                    }
-                    else
-                    {
-                        borrowed[i] = true;
-                        cout<<"You borrowed "<<name<<endl;
-                    }
-                    found=true;
-                    break;
+                    cout<<"Invalid number. \n";
                 }
             }
-
-            if(!found)
-            {
-                cout<<"Book not found\n";
-            }
         }
-
+        
         else if(choice==4)
-        {
-            bool found=false;
-
-            for(int i=0 ; i< n ; i++)
-            {
-                if(book[i]==name)
-                {
-                    if(!borrowed[i])
-                    {
-                        cout<<"This book was not borrowed\n";
-                    }
-                    else
-                    {
-                        borrowed[i] = false;
-                        cout<<"Book returned successfully\n";
-                    }
-                    found=true;
-                    break;
-                }
-            }
-
-            if(!found)
-            {
-                cout<<"Book not found\n";
-            }
-        }
-
-        else if(choice==5)
         {
             cout<<"Thanks for visiting the library! \n";
             break;

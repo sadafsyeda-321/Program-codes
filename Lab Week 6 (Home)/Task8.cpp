@@ -27,7 +27,8 @@ int main()
     {
         cout<<"Flight "<<Flight_Num[i]<<" to "<<destination[i]<<" has "<<SeatsAvailable[i]<<" seats available."<<endl;
     }
-    cout<<"\nFlights with less than 5 seats\n";
+    cout<<endl;
+    cout<<"Flights with less than 5 seats\n";
     cout<<"-------------------------------\n";
 
     for (int i = 0; i < n; i++)
@@ -42,6 +43,4 @@ int main()
     {
          cout<<"No flight with less than 5 seats available.";
     }
-    
-    return 0;
 }

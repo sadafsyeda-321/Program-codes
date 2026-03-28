@@ -14,10 +14,12 @@ main(){
     }
     cout<<"Enter a letter to check: ";
     cin>>letters;
+
+
     for(int i=0; i < n; i++){
-        if ( name[i] [0] == letters){
+        if ( toupper (name[i] [0]) == letters || tolower(name[i] [0])){
             count++;
         }
     }
     cout<<"Total names starting with '" << letters <<"' : " << count <<endl;
-    }
+}
