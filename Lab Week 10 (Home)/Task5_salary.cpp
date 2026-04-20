@@ -1,29 +1,72 @@
 #include<iostream>
+#include<cmath>
 using namespace std;
+float score90 = 0.2;
 
-string IsStrong(int Num);
+float score75_89 = 0.1;
+float scoreOtherwise = 0.05;
 
-bool strongNum = false;
+// Pprototype
+ float bonusCalculator (float base, int score, int experience);
+
+// Main Function
+
 
 main(){
-    int number;
-    cout << "Enter number: ";
-    cin >> number;
-    string result = IsStrong(number);
-    if (result == "true"){
-        cout << "Strong Num ";
-    }
-    else
-    {
-        cout << "Not Strong Num ";
-    }
-    
+float basic_Pay;
+int score, experience;
+cout << "Enter base, score and experience in years: " << endl;
+cin >> basic_Pay;
+cin >> score;
+cin >> experience;
+float result = bonusCalculator (basic_Pay, score, experience);
+cout << "Final Salary: " << result;
 }
 
-string IsStrong(int n){
-    int temp = n;
-    int mod;
-    int ans = 0;
-    string answer = "false";
+// Bonus Calculator
 
+float bonusCalculator (float base, int score, int experience)
+{
+
+// if condition for calculating bonus
+
+float totalSalary;
+float totalBonus;
+float experienceBonus;
+if (score >= 90){
+
+totalBonus = base * score90;
 }
+
+if (experience >= 5)
+{
+    experienceBonus = base * 0.05;
+}
+
+else if (score <= 89 && score >= 75){
+
+totalBonus = base * score75_89;
+if (experience >= 5){
+experienceBonus = base * 0.05;
+}
+}
+else {
+totalBonus = base * scoreOtherwise;
+if (experience >= 5)
+{
+experienceBonus = base * 0.05;
+}
+}
+totalSalary = base + totalBonus + experienceBonus;
+return totalSalary;
+}
+
+
+
+
+
+
+
+
+
+
