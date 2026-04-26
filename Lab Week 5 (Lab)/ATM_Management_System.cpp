@@ -21,7 +21,6 @@ main(){
         if (i==3 && !(pin=="1234"))
         {
             cout<< "Too many attempts. Program ends."<<endl;
-        }
     }
         for (int j=1;j<=4; j++)
     {
@@ -68,4 +67,5 @@ main(){
                 cout<<"Invalid choice"<<endl;
             }
     }
+}
 }
