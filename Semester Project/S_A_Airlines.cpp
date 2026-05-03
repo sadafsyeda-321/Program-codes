@@ -10,7 +10,7 @@ main()
     int Executive = 10;
     int Economy = 10;
     int TotalFlight_Tickets = 40;
-    int Premium_Price = 2000000;
+    int Premium_Price = 200000;
     int Business_Price = 150000;
     int Executive_Price = 120000;
     int Economy_Price = 100000;
@@ -40,7 +40,7 @@ main()
         cout << "----------------        S & A AIRLINES       ------------------ \n";
         cout << "--------------------------------------------------------------- \n";
 
-        cout << "User menu \n";
+        cout << "Main Menu \n";
         cout << "1. Admin \n";
         cout << "2. Passengers \n";
         cout << "3. Exit \n";
@@ -89,7 +89,7 @@ main()
                         if (AdminOption == "1")
                         {
                             // Pasengers Record
-                            cout << "Name \t  CNIC No.  \tTotal Tickets  \tPremium Luxury  \t Business Class  \tExecutive  \tEconomy  \tTicket Price  \tOrigin Flight  \tDestination Flight  \tDuration  \n";
+                            cout << "Name\tCNIC No.\tTotal Tickets \tPremium Luxury\tBusiness Class\tExecutive\tEconomy \tTicket Price \tOrigin Flight \tDestination Flight \tDuration \n";
                             // Father Name  \tAgeArray  \tAddress
                             for (int i = 0; i < index; i++)
                             {
@@ -107,6 +107,7 @@ main()
                             // find passengers by name function
                             cout << "Enter the name you want to search: ";
                             string name;
+                            cin.ignore();
                             getline(cin, name);
                             bool found = false;
                             int foundindex = -1;            // suppose value as by second pattern
@@ -124,14 +125,14 @@ main()
                             }
                             else
                             {
-                                cout << "Name \t   \tCNIC No.   \tTotal Tickets  \t Premium Luxury  \t Business Class  \tExecutive  \tEconomy  \t  Ticket Price  \t  Origin Flight  \tDestination Flight  \tDuration  \n";
+                                cout << "Name \tCNIC No. \tTotal Tickets \tPremium Luxury\tBusiness Class\tExecutive \tEconomy\tTicket Price \tOrigin Flight \tDestination Flight \tDuration  \n";
                                 cout << nameArray[foundindex] << "\t" << CNIC_No_array[foundindex] << "\t"
                                      << Total_Tickets_array[foundindex] << "\t" << Premium_Luxury_array[foundindex] << "\t" << Business_Class_array[foundindex]
                                      << "\t" << Executive_array[foundindex] << "\t" << Economy_array[foundindex] << "\t" << Origin_Flight_array[foundindex] << "\t"
                                      << Destination_Flight_array[foundindex] << "\t" << Duration_array[foundindex] << endl;
                                 // \tAddress  << Father_Name_array[foundindex] << "\t" << AgeArray[foundindex] << "\t"
                                 // << Address_array[foundindex] << "\t"
-                                //Father Name  \tAgeArray
+                                // Father Name  \tAgeArray
                                 // code can be used as that of option 1 but this one shows the exact match
                             }
                         }
@@ -140,6 +141,7 @@ main()
                             // update passenger record                     i-e firstly requires search passenger
                             cout << "Enter the name you want to update record of ";
                             string name;
+                            cin.ignore(); // deletes the line from previous cin
                             getline(cin, name);
                             bool found = false;
                             int foundindex = -1;
@@ -155,7 +157,7 @@ main()
                             {
 
                                 cout << "-------- Old Record --------" << endl; // old record is shown
-                                cout << "Name \t  \tCNIC No.    \tTotal Tickets  \t Premium Luxury  \t Business Class  \tExecutive  \tEconomy  \t  Ticket Price  \t  Origin Flight  \tDestination Flight  \tDuration  \n";
+                                cout << "Name \tCNIC No. \tTotal Tickets \tPremium Luxury \tBusiness Class \tExecutive \tEconomy\t Ticket Price  \tOrigin Flight \tDestination Flight\tDuration  \n";
                                 cout << nameArray[foundindex] << "\t" << CNIC_No_array[foundindex] << "\t" << Total_Tickets_array[foundindex]
                                      << "\t" << Premium_Luxury_array[foundindex] << "\t" << Business_Class_array[foundindex] << "\t" << Executive_array[foundindex]
                                      << "\t" << Economy_array[foundindex] << "\t" << Origin_Flight_array[foundindex] << "\t"
@@ -167,50 +169,67 @@ main()
                                 cout << "Enter new record for update: " << endl; // if directly it is shown it would change the already provided data
                                 cout << "Enter your name: ";
                                 string name;
+                                cin.ignore();
                                 getline(cin, name);
                                 // string Father_Name;
                                 // getline(cin, Father_Name);
                                 // int Age;
                                 // cin >> Age;
                                 int CNIC_No;
+                                cout << "CNIC No. : ";
                                 cin >> CNIC_No;
                                 // string Address;
                                 // cin >> Address;
                                 int Total_Tickets;
+                                cout << "Total Tickets: ";
                                 cin >> Total_Tickets;
                                 int Premium_Luxury;
+                                cout << "Premium Luxury: ";
                                 cin >> Premium_Luxury;
                                 int Business_Class;
+                                cout << "Business Class: ";
                                 cin >> Business_Class;
                                 int Executive;
+                                cout << "Executive: ";
                                 cin >> Executive;
                                 int Economy;
+                                cout << "Economy: ";
                                 cin >> Economy;
                                 int Ticket_Price;
+                                cout << "Ticket_Price: ";
                                 cin >> Ticket_Price;
                                 string Origin_Flight;
+                                cout << "Origin Flight: ";
+                                cin.ignore();
                                 getline(cin, Origin_Flight);
                                 string Destination_Flight;
+                                cout << "Destination Flight: ";
+                                cin.ignore();
                                 getline(cin, Destination_Flight);
                                 string Duration;
-                                cin >> Duration;
+                                cout << "Duration: ";
+                                cin.ignore();
+                                getline(cin, Duration);
                                 string contactInfo;
-                                cin >> contactInfo;
+                                cout << "contactInfo: ";
+                                cin.ignore();
+                                getline(cin, contactInfo);
+
                                 nameArray[foundindex] = name; // now we have to make changes in the found index
                                 // Address_array[foundindex] = Address;
                                 contactInfo_array[foundindex] = contactInfo;
                                 // Father_Name_array[foundindex] = Father_Name;
                                 CNIC_No_array[foundindex] = CNIC_No;
                                 Origin_Flight_array[foundindex] = Origin_Flight;
-                                Destination_Flight_array[Total_Passengers] = Destination_Flight;
+                                Destination_Flight_array[foundindex] = Destination_Flight;
                                 // AgeArray[Total_Passengers] = Age;
-                                Total_Tickets_array[Total_Passengers] = Total_Tickets;
-                                Premium_Luxury_array[Total_Passengers] = Premium_Luxury;
-                                Business_Class_array[Total_Passengers] = Business_Class;
-                                Executive_array[Total_Passengers] = Executive;
-                                Economy_array[Total_Passengers] = Economy;
-                                Duration_array[Total_Passengers] = Duration;
-                                contactInfo_array[Total_Passengers] = contactInfo;
+                                Total_Tickets_array[foundindex] = Total_Tickets;
+                                Premium_Luxury_array[foundindex] = Premium_Luxury;
+                                Business_Class_array[foundindex] = Business_Class;
+                                Executive_array[foundindex] = Executive;
+                                Economy_array[foundindex] = Economy;
+                                Duration_array[foundindex] = Duration;
+                                contactInfo_array[foundindex] = contactInfo;
                             }
                             else
                             {
@@ -249,6 +268,11 @@ main()
                                         string temp_Destination = Destination_Flight_array[i];
                                         Destination_Flight_array[i] = Destination_Flight_array[j];
                                         Destination_Flight_array[j] = temp_Destination;
+
+                                        // Swapping of Duration
+                                        string temp_Duration = Duration_array[i];
+                                        Duration_array[i] = Duration_array[j];
+                                        Duration_array[j] = temp_Duration;
                                     }
                                 }
                             }
@@ -258,7 +282,7 @@ main()
                             {
                                 if (nameArray[i] != "") // this condition helps in display of code only with some value while helps in deletion
                                 {
-                                    cout << nameArray[i] << "\t" << Total_Tickets_array[i] << "\t" << Origin_Flight_array[i] << Destination_Flight_array[i] << "\t" << Duration_array << endl;
+                                    cout << nameArray[i] << "\t" << Total_Tickets_array[i] << " \t " << Origin_Flight_array[i] << "\t  " << Destination_Flight_array[i] << " \t  " << Duration_array[i] << endl;
                                 }
                             }
                         }
@@ -267,6 +291,7 @@ main()
                             // delete Passenger record
                             cout << "Enter the name you want to Delete record of ";
                             string name;
+                            cin.ignore(); // discard the new line from previous cin
                             getline(cin, name);
                             bool found = false;
                             int foundindex = -1;
@@ -286,15 +311,16 @@ main()
                                 // Father_Name_array[foundindex] = "";
                                 CNIC_No_array[foundindex] = "";
                                 Origin_Flight_array[foundindex] = "";
-                                Destination_Flight_array[Total_Passengers] = "";
-                                // AgeArray[Total_Passengers] = 0;
-                                Total_Tickets_array[Total_Passengers] = 0;
-                                Premium_Luxury_array[Total_Passengers] = 0;
-                                Business_Class_array[Total_Passengers] = 0;
-                                Executive_array[Total_Passengers] = 0;
-                                Economy_array[Total_Passengers] = 0;
-                                Duration_array[Total_Passengers] = "";
-                                contactInfo_array[Total_Passengers] = "";
+                                Destination_Flight_array[foundindex] = "";
+                                // AgeArray[foundindex] = 0;
+                                Total_Tickets_array[foundindex] = 0;
+                                Premium_Luxury_array[foundindex] = 0;
+                                Business_Class_array[foundindex] = 0;
+                                Executive_array[foundindex] = 0;
+                                Economy_array[foundindex] = 0;
+                                Duration_array[foundindex] = "";
+                                contactInfo_array[foundindex] = "";
+                                cout << "Record of " << name << " Deleted " << endl;
                             }
                             else
                             {
@@ -524,6 +550,7 @@ main()
             cout << "Welcome to S & A Airlines Menu \n";
             string name;
             cout << "Name: ";
+            cin.ignore(); // discard the new line from previous cin
             getline(cin, name);
             // string Father_Name;
             // cout << "Father's Name: ";
@@ -534,33 +561,85 @@ main()
             string CNIC_No;
             cout << "CNIC No: ";
             cin >> CNIC_No;
-            string address;
+            // string address;
             // cout << "Address: ";
             // cin >> address;
             float Total_Tickets;
             cout << "Total Tickets: ";
             cin >> Total_Tickets;
+            if (Total_Tickets > 40)
+            {
+                cout << "Seats not available \n";
+                break;
+            }
+            else
+            {
+                cout << "Your seat has been booked. \n";
+            }
             float Premium_Luxury;
             cout << "Premium_Luxury Tickets: ";
             cin >> Premium_Luxury;
+            if (Premium_Luxury > 10)
+            {
+                cout << "Seats not available \n";
+                break;
+            }
+            else
+            {
+                cout << "Your seat has been booked.\n";
+            }
+
             float Business_Class;
             cout << "Business_Class Tickets: ";
             cin >> Business_Class;
+            if (Business_Class > 10)
+            {
+                cout << "Seats not available\n";
+                break;
+            }
+            else
+            {
+                cout << "Your seat has been booked.\n";
+            }
             float Executive;
             cout << "Executive Tickets: ";
             cin >> Executive;
+            if (Executive > 10)
+            {
+                cout << "Seats not available" << endl;
+                break;
+            }
+            else
+            {
+                cout << "Your seat has been booked.\n";
+            }
+
             float Economy;
             cout << "Economy Tickets: ";
             cin >> Economy;
+            if (Economy > 10)
+            {
+                cout << "Seats not available";
+                break;
+            }
+            else
+            {
+                cout << "Your seat has been booked.";
+            }
             string Origin_Flight;
             cout << "Origin_Flight: ";
+            cin.ignore();
             getline(cin, Origin_Flight);
+
             string Destination_Flight;
             cout << "Destination_Flight: ";
+            cin.ignore();
             getline(cin, Destination_Flight);
+
             string contactInfo;
             cout << "contactInfo: ";
-            cin >> contactInfo;
+            cin.ignore();
+            getline(cin, contactInfo);
 
             nameArray[index] = name; // now we have to make changes in the found index
             // Address_array[index] = address;
@@ -594,3 +673,5 @@ main()
 
     cout << "Thanks for using the software. ";
 }
+
+
