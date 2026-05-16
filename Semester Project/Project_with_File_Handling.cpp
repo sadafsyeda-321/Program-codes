@@ -1,10 +1,11 @@
 #include <iostream>
 #include <conio.h>
 #include <stdlib.h>
+#include <fstream>
+#include <sstream>
 using namespace std;
 
-// Data Structures Start
-
+// Global variables
 const int Total_Passengers = 1000;
 int passengerCount = 7;
 const int PremiumLuxury = 10;
@@ -29,6 +30,50 @@ int Executive_array[Total_Passengers] = {0, 0, 1, 0, 0, 1, 1};
 int Economy_array[Total_Passengers] = {0, 0, 1, 0, 1, 0, 2};
 string Duration_array[Total_Passengers] = {"3 hrs", "2.5 hrs", "1 hrs", "6 hrs", "13 hrs", "10 hrs", "18 hrs"};
 
+
+void loadData()
+{
+    ifstream file("data.txt");
+    if (!file)
+    {
+        cout << "No saved data found." << endl;
+        return;
+    }
+
+    // Read passengerCount from first line
+    file >> passengerCount;
+    file.ignore();          // discard the trailing newline
+
+    string line;
+    int i = 0;
+
+    while (getline(file, line) && i < Total_Passengers)
+    {
+        stringstream ss(line);
+        string token;
+
+        getline(ss, token, '|'); 
+        nameArray[i] = token;
+        getline(ss, token, '|');
+         contactInfo_array[i]        = token;
+        getline(ss, token, '|'); CNIC_No_array[i]            = token;
+        getline(ss, token, '|'); Origin_Flight_array[i]      = token;
+        getline(ss, token, '|'); Destination_Flight_array[i] = token;
+        getline(ss, token, '|'); Total_Tickets_array[i]      = stoi(token);
+        getline(ss, token, '|'); Premium_Luxury_array[i]     = stoi(token);
+        getline(ss, token, '|'); Business_Class_array[i]     = stoi(token);
+        getline(ss, token, '|'); Executive_array[i]          = stoi(token);
+        getline(ss, token, '|'); Economy_array[i]            = stoi(token);
+        getline(ss, token, '|'); Duration_array[i]           = token;
+
+        i++;
+    }
+
+    file.close();
+    cout << "Data loaded successfully." << endl;
+}
+
+
 // Data Structures End
 
 // FUNCTION DECLARATION
@@ -48,24 +93,23 @@ void premiumAvailable();
 void businessAvailable();
 void executiveAvailable();
 void economyAvailable();
-void availableSlots(int available);
+void availableSlots();
 void clearScreen();
-bool adminLogin(string username, string password);
+bool adminLogin();
 // Function Prototype End
 
 // Main start
 int main()
 {
     string userOption;
-    string username;
-    string password;
     while (true)
     {
         clearScreen();
         mainHeader();
         mainMenu();
-        cin >> userOption;
-        if (userOption == "1" && adminLogin(username, password))
+
+        getline(cin, userOption);
+        if (userOption == "1" && adminLogin())
         {
             adminMenu();
         }
@@ -84,6 +128,11 @@ int main()
         }
     }
     cout << "Thanks for using the software. ";
+    fstream newFile;
+    newFile.open("ProjectFile.txt", ios::in);
+    newFile << userOption;
+    newFile.close();
+
     return 0;
 }
 
@@ -106,14 +155,16 @@ void mainMenu()
     cout << "Chooose Option: ";
 }
 
-bool adminLogin(string username, string password)
+bool adminLogin()
 {
     for (int i = 0; i < 3; i++)
     {
         cout << "Admin Menu: Login Attempt " << i + 1 << endl;
         cout << "Enter username: ";
+        string username;
         cin >> username;
         cout << "Enter password: ";
+        string password;
         cin >> password;
         if (username == "admin" && password == "1234")
         {
@@ -124,6 +175,12 @@ bool adminLogin(string username, string password)
         }
         cout << "Invalid Password \n";
         getch();
+
+        fstream newFile;
+        newFile.open("ProjectFile.txt", ios::in);
+        newFile << username << endl
+                << password << endl;
+        newFile.close();
     }
     return false;
 }
@@ -143,7 +200,12 @@ string adminMenuHeader()
     cout << "9. Logout \n";
     cout << " Choose the Option: ";
     string adminOption;
-    cin >> adminOption;
+    getline(cin, adminOption);
+    fstream newFile;
+    newFile.open("ProjectFile.txt", ios::in);
+    newFile << adminOption;
+    newFile.close();
+
     return adminOption;
 }
 
@@ -158,19 +220,11 @@ void adminMenu()
         }
         else if (adminOption == "2")
         {
-            cout << "Enter the name you want to search: ";
-            string name;
-            cin.ignore();
-            getline(cin, name);
-            searchPassengers(name);
+            searchPassengers(" ");
         }
         else if (adminOption == "3")
         {
-            string name;
-            cout << "Enter the name you want to update record of ";
-            cin.ignore(); // deletes the line from previous cin
-            getline(cin, name);
-            updateRecord(name);
+            updateRecord(" ");
         }
         else if (adminOption == "4")
         {
@@ -178,12 +232,7 @@ void adminMenu()
         }
         else if (adminOption == "5")
         {
-
-            cout << "Enter the name you want to Delete record of ";
-            string name;
-            cin.ignore(); // discard the new line from previous cin
-            getline(cin, name);
-            deleteRecord(name);
+            deleteRecord(" ");
         }
         else if (adminOption == "6")
         {
@@ -195,7 +244,7 @@ void adminMenu()
         }
         else if (adminOption == "8")
         {
-            availableSlots(' ');
+            availableSlots();
         }
         else if (adminOption == "9")
         {
@@ -207,6 +256,10 @@ void adminMenu()
         }
         cout << "Press any key to continue ";
         getch();
+        fstream newFile;
+        newFile.open("ProjectFile.txt", ios::app);
+        newFile << adminOption;
+        newFile.close();
     }
 }
 
@@ -305,6 +358,9 @@ void showAllPassengers()
 void searchPassengers(string name)
 {
     clearScreen();
+    cout << "Enter the name you want to search: ";
+    cin.ignore();
+    getline(cin, name);
 
     bool isFound = false;
     int foundpassengerCount = -1; // suppose value as by second pattern
@@ -338,6 +394,9 @@ void searchPassengers(string name)
 // Update Passenger Record
 void updateRecord(string name)
 {
+    cout << "Enter the name you want to update record of ";
+    cin.ignore(); // deletes the line from previous cin
+    getline(cin, name);
     bool found = false;
     int foundpassengerCount = -1;
     for (int i = 0; i < passengerCount; i++) // passengerCount contains all data being stored
@@ -465,6 +524,9 @@ void generateList()
 // Delete Record
 void deleteRecord(string name)
 {
+    cout << "Enter the name you want to Delete record of ";
+    cin.ignore(); // discard the new line from previous cin
+    getline(cin, name);
     bool found = false;
     int foundpassengerCount = -1;
     for (int i = 0; i < passengerCount; i++) // passengerCount contains all data being stored
@@ -561,7 +623,7 @@ void economyAvailable()
     cout << "Total Economy seats available: " << tickets_available << endl;
 }
 
-void availableSlots(int available)
+void availableSlots()
 {
     clearScreen();
     int total_Sold = 0;
@@ -569,7 +631,7 @@ void availableSlots(int available)
     {
         total_Sold = total_Sold + Total_Tickets_array[i];
     }
-    available = TotalFlight_Tickets - total_Sold;
+    int available = TotalFlight_Tickets - total_Sold;
     cout << "Total Available Tickets:" << available << endl;
     premiumAvailable();
     businessAvailable();
