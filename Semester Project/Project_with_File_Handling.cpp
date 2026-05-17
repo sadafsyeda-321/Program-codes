@@ -1,11 +1,12 @@
 #include <iostream>
+#include <fstream>
 #include <conio.h>
 #include <stdlib.h>
-#include <fstream>
-#include <sstream>
+#include<string>
 using namespace std;
 
-// Global variables
+// Data Structures Start
+
 const int Total_Passengers = 1000;
 int passengerCount = 7;
 const int PremiumLuxury = 10;
@@ -30,50 +31,6 @@ int Executive_array[Total_Passengers] = {0, 0, 1, 0, 0, 1, 1};
 int Economy_array[Total_Passengers] = {0, 0, 1, 0, 1, 0, 2};
 string Duration_array[Total_Passengers] = {"3 hrs", "2.5 hrs", "1 hrs", "6 hrs", "13 hrs", "10 hrs", "18 hrs"};
 
-
-void loadData()
-{
-    ifstream file("data.txt");
-    if (!file)
-    {
-        cout << "No saved data found." << endl;
-        return;
-    }
-
-    // Read passengerCount from first line
-    file >> passengerCount;
-    file.ignore();          // discard the trailing newline
-
-    string line;
-    int i = 0;
-
-    while (getline(file, line) && i < Total_Passengers)
-    {
-        stringstream ss(line);
-        string token;
-
-        getline(ss, token, '|'); 
-        nameArray[i] = token;
-        getline(ss, token, '|');
-         contactInfo_array[i]        = token;
-        getline(ss, token, '|'); CNIC_No_array[i]            = token;
-        getline(ss, token, '|'); Origin_Flight_array[i]      = token;
-        getline(ss, token, '|'); Destination_Flight_array[i] = token;
-        getline(ss, token, '|'); Total_Tickets_array[i]      = stoi(token);
-        getline(ss, token, '|'); Premium_Luxury_array[i]     = stoi(token);
-        getline(ss, token, '|'); Business_Class_array[i]     = stoi(token);
-        getline(ss, token, '|'); Executive_array[i]          = stoi(token);
-        getline(ss, token, '|'); Economy_array[i]            = stoi(token);
-        getline(ss, token, '|'); Duration_array[i]           = token;
-
-        i++;
-    }
-
-    file.close();
-    cout << "Data loaded successfully." << endl;
-}
-
-
 // Data Structures End
 
 // FUNCTION DECLARATION
@@ -93,23 +50,25 @@ void premiumAvailable();
 void businessAvailable();
 void executiveAvailable();
 void economyAvailable();
-void availableSlots();
+void availableSlots(int available);
 void clearScreen();
-bool adminLogin();
+bool adminLogin(string username, string password);
+void updateUserToFile(int foundpassengerCount,string username, string password);
 // Function Prototype End
 
 // Main start
 int main()
 {
     string userOption;
-    while (true)
+    string username;
+    string password;
+    while (true) //(getline(myfile,userOption, username, password ))
     {
         clearScreen();
         mainHeader();
         mainMenu();
-
-        getline(cin, userOption);
-        if (userOption == "1" && adminLogin())
+        cin >> userOption;
+        if (userOption == "1" && adminLogin(username, password))
         {
             adminMenu();
         }
@@ -128,11 +87,6 @@ int main()
         }
     }
     cout << "Thanks for using the software. ";
-    fstream newFile;
-    newFile.open("ProjectFile.txt", ios::in);
-    newFile << userOption;
-    newFile.close();
-
     return 0;
 }
 
@@ -155,19 +109,23 @@ void mainMenu()
     cout << "Chooose Option: ";
 }
 
-bool adminLogin()
+bool adminLogin(string username, string password)
 {
+
     for (int i = 0; i < 3; i++)
     {
         cout << "Admin Menu: Login Attempt " << i + 1 << endl;
         cout << "Enter username: ";
-        string username;
-        cin >> username;
+        cin.ignore();
+        getline(cin, username);
         cout << "Enter password: ";
-        string password;
-        cin >> password;
+        getline(cin, password);
         if (username == "admin" && password == "1234")
         {
+            fstream myfile;
+            myfile.open("Project.txt", ios::app);
+            myfile << username + "," + password + "\n" ;
+            myfile.close();
             clearScreen();
             cout << "Succesfully Logged in \n";
             getch();
@@ -175,13 +133,8 @@ bool adminLogin()
         }
         cout << "Invalid Password \n";
         getch();
-
-        fstream newFile;
-        newFile.open("ProjectFile.txt", ios::in);
-        newFile << username << endl
-                << password << endl;
-        newFile.close();
     }
+
     return false;
 }
 //      ADMIN MENU
@@ -200,31 +153,39 @@ string adminMenuHeader()
     cout << "9. Logout \n";
     cout << " Choose the Option: ";
     string adminOption;
-    getline(cin, adminOption);
-    fstream newFile;
-    newFile.open("ProjectFile.txt", ios::in);
-    newFile << adminOption;
-    newFile.close();
-
+    cin >> adminOption;
     return adminOption;
 }
 
 void adminMenu()
 {
+
     while (true)
     {
+        fstream myfile;
+        myfile.open("Project.txt", ios::app);
         string adminOption = adminMenuHeader();
+        myfile << adminOption;
+        myfile.close();
         if (adminOption == "1")
         {
             showAllPassengers();
         }
         else if (adminOption == "2")
         {
-            searchPassengers(" ");
+            cout << "Enter the name you want to search: ";
+            string name;
+            cin.ignore();
+            getline(cin, name);
+            searchPassengers(name);
         }
         else if (adminOption == "3")
         {
-            updateRecord(" ");
+            string name;
+            cout << "Enter the name you want to update record of ";
+            cin.ignore(); // deletes the line from previous cin
+            getline(cin, name);
+            updateRecord(name);
         }
         else if (adminOption == "4")
         {
@@ -232,7 +193,12 @@ void adminMenu()
         }
         else if (adminOption == "5")
         {
-            deleteRecord(" ");
+
+            cout << "Enter the name you want to Delete record of ";
+            string name;
+            cin.ignore(); // discard the new line from previous cin
+            getline(cin, name);
+            deleteRecord(name);
         }
         else if (adminOption == "6")
         {
@@ -244,7 +210,7 @@ void adminMenu()
         }
         else if (adminOption == "8")
         {
-            availableSlots();
+            availableSlots(0); // for int we have to pass a value
         }
         else if (adminOption == "9")
         {
@@ -256,12 +222,9 @@ void adminMenu()
         }
         cout << "Press any key to continue ";
         getch();
-        fstream newFile;
-        newFile.open("ProjectFile.txt", ios::app);
-        newFile << adminOption;
-        newFile.close();
     }
 }
+
 
 // Passenger Menu
 void passengerMenu()
@@ -336,13 +299,27 @@ void passengerMenu()
 
     cout << "Booking confirmed and your data has been saved. ";
     passengerCount++;
+    string inputData = name + "," + CNIC_No + "," + to_string(Premium_Luxury) + "," + to_string(Business_Class) + "," + to_string(Executive) + "," + to_string(Economy) + "," + to_string(Total_Tickets) + "," + to_string(Total_Tickets) + "," + to_string(total_Price) + "," + Origin_Flight + "," + Destination_Flight + "," + contactInfo + "\n";
+    fstream myfile;
+    myfile.open("Project.txt", ios::app);
+    myfile >> inputData;
+    myfile.close();
+    
     getch();
 }
 
 // Show All Passengers Record
 void showAllPassengers()
 {
-    cout << "Name\tCNIC No.\tTotal Tickets \tPremium Luxury\tBusiness Class\tExecutive\tEconomy \tTicket Price \tOrigin Flight \tDestination Flight \tDuration \n";
+    string record;
+    fstream myfile;
+    myfile.open("Project.txt", ios::out);
+    while (!myfile.eof())
+    {
+        getline(myfile,record);
+        // cout << record;
+        myfile.close();
+        cout << "Name\tCNIC No.\tTotal Tickets \tPremium Luxury\tBusiness Class\tExecutive\tEconomy \tTicket Price \tOrigin Flight \tDestination Flight \tDuration \n";
     for (int i = 0; i < passengerCount; i++)
     {
         if (nameArray[i] != "")
@@ -352,16 +329,18 @@ void showAllPassengers()
                  << Destination_Flight_array[i] << "\t" << Duration_array[i] << endl;
         }
     }
+    }  
+    getch();
 }
 
 // Search Passenger
 void searchPassengers(string name)
 {
     clearScreen();
-    cout << "Enter the name you want to search: ";
-    cin.ignore();
-    getline(cin, name);
-
+    fstream myfile;
+    myfile.open("Project.txt", ios::in);
+    getline(myfile, name);
+    myfile.close();
     bool isFound = false;
     int foundpassengerCount = -1; // suppose value as by second pattern
     for (int i = 0; i < passengerCount; i++)
@@ -389,14 +368,12 @@ void searchPassengers(string name)
         // code can be used as that of option 1 but this one shows the exact match
         getch();
     }
+    myfile.close();
 }
 
 // Update Passenger Record
 void updateRecord(string name)
 {
-    cout << "Enter the name you want to update record of ";
-    cin.ignore(); // deletes the line from previous cin
-    getline(cin, name);
     bool found = false;
     int foundpassengerCount = -1;
     for (int i = 0; i < passengerCount; i++) // passengerCount contains all data being stored
@@ -417,6 +394,7 @@ void updateRecord(string name)
              << "\t" << Economy_array[foundpassengerCount] << "\t" << Origin_Flight_array[foundpassengerCount] << "\t"
              << Destination_Flight_array[foundpassengerCount] << "\t" << Duration_array[foundpassengerCount] << endl;
 
+        cout << "--------- Updated Record -------- \n";
         cout << "Enter new record for update: " << endl; // if directly it is shown it would change the already provided data
         cout << "Enter your name: ";
         string name;
@@ -470,6 +448,7 @@ void updateRecord(string name)
         Duration_array[foundpassengerCount] = Duration;
         contactInfo_array[foundpassengerCount] = contactInfo;
         cout << "Record updated. \n";
+        updateUserToFile();
     }
     else
     {
@@ -477,9 +456,26 @@ void updateRecord(string name)
     }
 }
 
+void updateUserToFile(int foundpassengerCount,string username, string password)
+{
+    fstream myFile;
+    myFile.open("Project.txt", ios::out);
+    username[foundpassengerCount] = stoi(username);
+    password[foundpassengerCount] = stoi (password);
+    string record[Total_Passengers];
+    for (int i = 0; i < passengerCount; i++)
+    {
+        string userRecord[i] = username[i] + "," + password [i];
+        myFile << userRecord[i];
+    }
+    myFile.close();
+}
+
 // Generate List
 void generateList()
 {
+    fstream myfile;
+    myfile.open("Project.txt", ios::out);
     for (int i = 0; i < passengerCount; i++)
     { // outer loop remains same
         for (int j = i + 1; j < passengerCount; j++)
@@ -519,14 +515,14 @@ void generateList()
     }
     cout << "Sorted list is as follows: \n";
     showAllPassengers();
+    myfile.close();
 }
 
 // Delete Record
 void deleteRecord(string name)
 {
-    cout << "Enter the name you want to Delete record of ";
-    cin.ignore(); // discard the new line from previous cin
-    getline(cin, name);
+    fstream myfile;
+    myfile.open("Project.txt", ios::app);
     bool found = false;
     int foundpassengerCount = -1;
     for (int i = 0; i < passengerCount; i++) // passengerCount contains all data being stored
@@ -557,6 +553,7 @@ void deleteRecord(string name)
     {
         cout << "Record not found " << endl;
     }
+    myfile.close();
 }
 void ticketPrice()
 {
@@ -623,7 +620,7 @@ void economyAvailable()
     cout << "Total Economy seats available: " << tickets_available << endl;
 }
 
-void availableSlots()
+void availableSlots(int available)
 {
     clearScreen();
     int total_Sold = 0;
@@ -631,7 +628,7 @@ void availableSlots()
     {
         total_Sold = total_Sold + Total_Tickets_array[i];
     }
-    int available = TotalFlight_Tickets - total_Sold;
+    available = TotalFlight_Tickets - total_Sold;
     cout << "Total Available Tickets:" << available << endl;
     premiumAvailable();
     businessAvailable();
@@ -641,7 +638,10 @@ void availableSlots()
 }
 void clearScreen()
 {
+    fstream myfile;
+    myfile.open("Project.txt", ios::out);
     system("cls");
+    myfile.close();
 }
 
 // Function End

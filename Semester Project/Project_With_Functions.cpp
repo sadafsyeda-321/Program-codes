@@ -195,7 +195,7 @@ void adminMenu()
         }
         else if (adminOption == "8")
         {
-            availableSlots(' ');
+            availableSlots(0);                           // for int we have to pass a value
         }
         else if (adminOption == "9")
         {
