@@ -2,35 +2,33 @@
 #include <fstream>
 #include <conio.h>
 #include <stdlib.h>
-#include<string>
+#include <string>
 using namespace std;
 
 // Data Structures Start
 
 const int Total_Passengers = 1000;
-int passengerCount = 7;
-const int PremiumLuxury = 10;
-const int BusinessClass = 10;
-const int Executive = 10;
-const int Economy = 10;
-const int TotalFlight_Tickets = 40;
+int passengerCount = 30;
+const int PremiumLuxury = 100;
+const int BusinessClass = 100;
+const int Executive = 100;
+const int Economy = 100;
+const int TotalFlight_Tickets = 400;
 const int Premium_Price = 200000;
 const int Business_Price = 150000;
 const int Executive_Price = 120000;
 const int Economy_Price = 100000;
 
-string nameArray[Total_Passengers] = {"Ali", "Uzair", "Sara", "Usman", "Zimal", "Bilal", "Hamdan"};
-string contactInfo_array[Total_Passengers] = {"03247512487", "03225512489", "03247958487", "0324796847", "030414724866", "030426824869", "03098547433"};
-string CNIC_No_array[Total_Passengers] = {"36402-07451", "36402-026847", "36402-214875", "36402-694781", "36402-485451", "36402-627451", "36402-847551"};
-string Origin_Flight_array[Total_Passengers] = {"Multan", "Quetta", "Sialkot", "Peshawar", "Karachi", "Lahore", "Islamabad"};
-string Destination_Flight_array[Total_Passengers] = {"Karachi", "Dubai", "Abu Dhabi", "London", "Toronto", "Kuala lampur", "New York"};
-int Total_Tickets_array[Total_Passengers] = {1, 1, 3, 2, 1, 5, 4};
-int Premium_Luxury_array[Total_Passengers] = {1, 0, 0, 1, 0, 2, 0};
-int Business_Class_array[Total_Passengers] = {0, 1, 1, 0, 1, 2, 1};
-int Executive_array[Total_Passengers] = {0, 0, 1, 0, 0, 1, 1};
-int Economy_array[Total_Passengers] = {0, 0, 1, 0, 1, 0, 2};
-string Duration_array[Total_Passengers] = {"3 hrs", "2.5 hrs", "1 hrs", "6 hrs", "13 hrs", "10 hrs", "18 hrs"};
-
+string nameArray[Total_Passengers];
+string contactInfo_array[Total_Passengers];
+string CNIC_No_array[Total_Passengers];
+string Origin_Flight_array[Total_Passengers];
+string Destination_Flight_array[Total_Passengers];
+int Total_Tickets_array[Total_Passengers];
+int Premium_Luxury_array[Total_Passengers];
+int Business_Class_array[Total_Passengers];
+int Executive_array[Total_Passengers];
+int Economy_array[Total_Passengers];
 // Data Structures End
 
 // FUNCTION DECLARATION
@@ -53,7 +51,8 @@ void economyAvailable();
 void availableSlots(int available);
 void clearScreen();
 bool adminLogin(string username, string password);
-void updateUserToFile(int foundpassengerCount,string username, string password);
+string getField(int record, int field);
+void addToFile(int found_index, string name, string CNIC, int Total_Tickets, int Premium_Luxury, int Business_Class, int Executive, int Economy,string Origin_Flight, string Destination_Flight, string contact_info);
 // Function Prototype End
 
 // Main start
@@ -62,7 +61,7 @@ int main()
     string userOption;
     string username;
     string password;
-    while (true) //(getline(myfile,userOption, username, password ))
+    while (true)
     {
         clearScreen();
         mainHeader();
@@ -89,11 +88,9 @@ int main()
     cout << "Thanks for using the software. ";
     return 0;
 }
-
 // end of main function
 
 // Function Start
-
 void mainHeader()
 {
     cout << "--------------------------------------------------------------- \n";
@@ -108,10 +105,8 @@ void mainMenu()
     cout << "3. Exit \n";
     cout << "Chooose Option: ";
 }
-
 bool adminLogin(string username, string password)
 {
-
     for (int i = 0; i < 3; i++)
     {
         cout << "Admin Menu: Login Attempt " << i + 1 << endl;
@@ -123,8 +118,8 @@ bool adminLogin(string username, string password)
         if (username == "admin" && password == "1234")
         {
             fstream myfile;
-            myfile.open("Project.txt", ios::app);
-            myfile << username + "," + password + "\n" ;
+            myfile.open("ProjectLogin.txt", ios::app);
+            myfile << username + "," + password + "\n";
             myfile.close();
             clearScreen();
             cout << "Succesfully Logged in \n";
@@ -134,7 +129,6 @@ bool adminLogin(string username, string password)
         cout << "Invalid Password \n";
         getch();
     }
-
     return false;
 }
 //      ADMIN MENU
@@ -156,17 +150,11 @@ string adminMenuHeader()
     cin >> adminOption;
     return adminOption;
 }
-
 void adminMenu()
 {
-
     while (true)
     {
-        fstream myfile;
-        myfile.open("Project.txt", ios::app);
         string adminOption = adminMenuHeader();
-        myfile << adminOption;
-        myfile.close();
         if (adminOption == "1")
         {
             showAllPassengers();
@@ -224,8 +212,6 @@ void adminMenu()
         getch();
     }
 }
-
-
 // Passenger Menu
 void passengerMenu()
 {
@@ -250,18 +236,20 @@ void passengerMenu()
     int Economy;
     cout << "Economy Tickets: ";
     cin >> Economy;
-    if (Premium_Luxury > 10 || Business_Class > 10 || Executive > 10 || Economy > 10)
+    if (Premium_Luxury > 100 || Business_Class > 100 || Executive > 100 || Economy > 100)
     {
         cout << "Seats not available \n";
+        getch();
+        return;
     }
     else
     {
-        cout << "Your seat has been booked.\n";
+        cout << "Seat Confirmed! \n";
     }
     int Total_Tickets;
     Total_Tickets = Premium_Luxury + Business_Class + Executive + Economy;
     cout << "Total Tickets: " << Total_Tickets << endl;
-    if (Total_Tickets > 40)
+    if (Total_Tickets > 400)
     {
         cout << "Seats not available \n";
     }
@@ -269,22 +257,16 @@ void passengerMenu()
     {
         cout << "Your seat has been booked. \n";
     }
-    int total_Price;
-    total_Price = (Premium_Luxury * Premium_Price + Business_Class * Business_Price + Executive * Executive_Price + Economy * Economy_Price);
-    cout << "Total Ticket Price: " << total_Price << endl;
     string Origin_Flight;
     cin.ignore();
     cout << "Origin_Flight: ";
     getline(cin, Origin_Flight);
-
     string Destination_Flight;
     cout << "Destination_Flight: ";
     getline(cin, Destination_Flight);
-
     string contactInfo;
     cout << "contactInfo: ";
     getline(cin, contactInfo);
-
     nameArray[passengerCount] = name; // now we have to make changes in the found passengerCount
     contactInfo_array[passengerCount] = contactInfo;
     CNIC_No_array[passengerCount] = CNIC_No;
@@ -297,50 +279,102 @@ void passengerMenu()
     Economy_array[passengerCount] = Economy;
     contactInfo_array[passengerCount] = contactInfo;
 
+    string passengerRecord = name + "," + CNIC_No + "," + to_string(Total_Tickets) + "," +  to_string(Premium_Luxury) + "," + to_string(Business_Class) + "," + to_string(Executive) + "," + to_string(Economy) + "," + Origin_Flight + "," + Destination_Flight + "," + contactInfo + "\n";
+    fstream myfile;
+    myfile.open("PassengerMenuRecord.txt", ios::app);
+    myfile << passengerRecord; // separate file names
+    myfile.close();
     cout << "Booking confirmed and your data has been saved. ";
     passengerCount++;
-    string inputData = name + "," + CNIC_No + "," + to_string(Premium_Luxury) + "," + to_string(Business_Class) + "," + to_string(Executive) + "," + to_string(Economy) + "," + to_string(Total_Tickets) + "," + to_string(Total_Tickets) + "," + to_string(total_Price) + "," + Origin_Flight + "," + Destination_Flight + "," + contactInfo + "\n";
-    fstream myfile;
-    myfile.open("Project.txt", ios::app);
-    myfile >> inputData;
-    myfile.close();
-    
     getch();
 }
-
+// getField
+string getField(string record, int field)
+{
+    int commaCount = 1;
+    string word;
+    for (int i = 0; i < record.length(); i++)
+    {
+        if (record[i] == ',')
+        {
+            commaCount++;
+        }
+        else if (commaCount == field)
+        {
+            word = word + record[i];
+        }
+    }
+    return word;
+}
 // Show All Passengers Record
 void showAllPassengers()
 {
-    string record;
+    string passenger;
     fstream myfile;
-    myfile.open("Project.txt", ios::out);
-    while (!myfile.eof())
+    int index = 0;
+    myfile.open("PassengerMenuRecord.txt", ios::in);
+    while (getline(myfile, passenger))
     {
-        getline(myfile,record);
-        // cout << record;
-        myfile.close();
-        cout << "Name\tCNIC No.\tTotal Tickets \tPremium Luxury\tBusiness Class\tExecutive\tEconomy \tTicket Price \tOrigin Flight \tDestination Flight \tDuration \n";
+        if (passenger.empty())
+        {
+            continue;
+        }
+        nameArray[index] = getField(passenger, 1);
+        CNIC_No_array[index] = getField(passenger, 2);
+        Total_Tickets_array[index] = stoi(getField(passenger, 3));
+        Premium_Luxury_array[index] = stoi(getField(passenger, 4));
+        Business_Class_array[index] = stoi(getField(passenger, 5));
+        Executive_array[index] = stoi(getField(passenger, 6));
+        Economy_array[index] = stoi(getField(passenger, 7));
+        Origin_Flight_array[index] = getField(passenger, 8);
+        Destination_Flight_array[index] = getField(passenger, 9);
+        contactInfo_array[index] = getField(passenger, 10);
+        index++;
+    }
+    cout << "Name\tCNIC No.\tTotal Tickets \tPremium Luxury\tBusiness Class\tExecutive\tEconomy \tOrigin Flight \tDestination Flight \tContact Info \n";
     for (int i = 0; i < passengerCount; i++)
     {
         if (nameArray[i] != "")
         {
             cout << nameArray[i] << "\t" << CNIC_No_array[i] << "\t" << Total_Tickets_array[i] << "\t" << Premium_Luxury_array[i]
                  << "\t" << Business_Class_array[i] << "\t" << Executive_array[i] << "\t" << Economy_array[i] << "\t" << Origin_Flight_array[i] << "\t"
-                 << Destination_Flight_array[i] << "\t" << Duration_array[i] << endl;
+                 << Destination_Flight_array[i] << "\t" << contactInfo_array[i] << endl;
         }
     }
-    }  
     getch();
+    myfile.close();
 }
-
 // Search Passenger
 void searchPassengers(string name)
 {
     clearScreen();
+    string passenger;
     fstream myfile;
-    myfile.open("Project.txt", ios::in);
-    getline(myfile, name);
-    myfile.close();
+    int index = 0;
+    myfile.open("PassengerMenuRecord.txt", ios::in);
+    while (getline(myfile, passenger))
+    {
+        if (passenger.empty())
+        {
+            continue;
+        }
+        nameArray[index] = getField(passenger, 1);
+        CNIC_No_array[index] = getField(passenger, 2);
+        string TotalTickets = getField(passenger, 3);
+        Total_Tickets_array[index] = stoi(TotalTickets);
+        string Premium = getField(passenger, 4);
+        Premium_Luxury_array[index] = stoi(Premium);
+        string Business = getField(passenger, 5);
+        Business_Class_array[index] = stoi(Business);
+        string executive = getField(passenger, 6);
+        Executive_array[index] = stoi(executive);
+        string economy = getField(passenger, 7);
+        Economy_array[index] = stoi(economy);
+        Origin_Flight_array[index] = getField(passenger, 8);
+        Destination_Flight_array[index] = getField(passenger, 9);
+        contactInfo_array[index] = getField(passenger, 10);
+        index++;
+    }
     bool isFound = false;
     int foundpassengerCount = -1; // suppose value as by second pattern
     for (int i = 0; i < passengerCount; i++)
@@ -352,7 +386,6 @@ void searchPassengers(string name)
             break;
         }
     }
-
     if (isFound == false) // checking the condition outside the loop
     {
         cout << "Record not found against name " << name << endl;
@@ -360,20 +393,63 @@ void searchPassengers(string name)
     else
     {
         cout << "\n Record found \n";
-        cout << "Name \tCNIC No. \tTotal Tickets \tPremium Luxury\tBusiness Class\tExecutive \tEconomy\tTicket Price \tOrigin Flight \tDestination Flight \tDuration  \n";
+        cout << "Name \tCNIC No. \tTotal Tickets \tPremium Luxury\tBusiness Class\tExecutive \tEconomy\tOrigin Flight \tDestination Flight \tContact Info \n";
         cout << nameArray[foundpassengerCount] << "\t" << CNIC_No_array[foundpassengerCount] << "\t"
              << Total_Tickets_array[foundpassengerCount] << "\t" << Premium_Luxury_array[foundpassengerCount] << "\t" << Business_Class_array[foundpassengerCount]
              << "\t" << Executive_array[foundpassengerCount] << "\t" << Economy_array[foundpassengerCount] << "\t" << Origin_Flight_array[foundpassengerCount] << "\t"
-             << Destination_Flight_array[foundpassengerCount] << "\t" << Duration_array[foundpassengerCount] << endl;
-        // code can be used as that of option 1 but this one shows the exact match
+             << Destination_Flight_array[foundpassengerCount] << "\t" << contactInfo_array[foundpassengerCount] << endl;
         getch();
     }
     myfile.close();
 }
-
+// add Data
+void addToFile(int found_index, string name, string CNIC, int Total_Tickets, int Premium_Luxury, int Business_Class, int Executive, int Economy, string Origin_Flight, string Destination_Flight, string contact_info)
+{
+    fstream addDatatofile;
+    addDatatofile.open("PassengerMenuRecord.txt", ios::out);
+    nameArray[found_index] = name; 
+    CNIC_No_array[found_index] = CNIC;
+    Total_Tickets_array[found_index] = (Total_Tickets);
+    Premium_Luxury_array[found_index] = Premium_Luxury;
+    Business_Class_array[found_index] = Business_Class;
+    Executive_array[found_index] = Executive;
+    Economy_array[found_index] = Economy;
+    Origin_Flight_array[found_index] = Origin_Flight;
+    Destination_Flight_array[found_index] = Destination_Flight;
+    contactInfo_array[found_index] = contact_info;
+    string passenger_record[Total_Passengers];
+    for (int i = 0; i < passengerCount; i++)
+    {
+        passenger_record[i] = nameArray[i] + "," + CNIC_No_array[i] + "," + to_string(Total_Tickets_array[i]) + "," + to_string(Premium_Luxury_array[i]) + "," + to_string(Business_Class_array[i]) + "," + to_string(Executive_array[i]) + "," + to_string(Economy_array[i]) + "," + Origin_Flight_array[i] + "," + Destination_Flight_array[i] + "," + contactInfo_array[i] + "\n";
+        addDatatofile << passenger_record[i];
+    }
+    addDatatofile.close();
+}
 // Update Passenger Record
 void updateRecord(string name)
 {
+    string passenger;
+    fstream myfile;
+    int index = 0;
+    myfile.open("PassengerMenuRecord.txt", ios::in);
+    while (getline(myfile, passenger))
+    {
+        if (passenger.empty())
+        {
+            continue;
+        }
+        nameArray[index] = getField(passenger, 1);
+        CNIC_No_array[index] = getField(passenger, 2);
+        Total_Tickets_array[index] = stoi(getField(passenger, 3));
+        Premium_Luxury_array[index] = stoi(getField(passenger, 4));
+        Business_Class_array[index] = stoi(getField(passenger, 5));
+        Executive_array[index] = stoi(getField(passenger, 6));
+        Economy_array[index] = stoi(getField(passenger, 7));
+        Origin_Flight_array[index] = getField(passenger, 8);
+        Destination_Flight_array[index] = getField(passenger, 9);
+        contactInfo_array[index] = getField(passenger, 10);
+        index++;
+    }
     bool found = false;
     int foundpassengerCount = -1;
     for (int i = 0; i < passengerCount; i++) // passengerCount contains all data being stored
@@ -388,11 +464,11 @@ void updateRecord(string name)
     {
 
         cout << "-------- Old Record --------" << endl; // old record is shown
-        cout << "Name \tCNIC No. \tTotal Tickets \tPremium Luxury \tBusiness Class \tExecutive \tEconomy\t Ticket Price  \tOrigin Flight \tDestination Flight\tDuration  \n";
+        cout << "Name \tCNIC No. \tTotal Tickets \tPremium Luxury \tBusiness Class \tExecutive \tEconomy \tOrigin Flight \tDestination Flight\t Contact Info  \n";
         cout << nameArray[foundpassengerCount] << "\t" << CNIC_No_array[foundpassengerCount] << "\t" << Total_Tickets_array[foundpassengerCount]
              << "\t" << Premium_Luxury_array[foundpassengerCount] << "\t" << Business_Class_array[foundpassengerCount] << "\t" << Executive_array[foundpassengerCount]
              << "\t" << Economy_array[foundpassengerCount] << "\t" << Origin_Flight_array[foundpassengerCount] << "\t"
-             << Destination_Flight_array[foundpassengerCount] << "\t" << Duration_array[foundpassengerCount] << endl;
+             << Destination_Flight_array[foundpassengerCount] << "\t" << contactInfo_array[foundpassengerCount] << endl;
 
         cout << "--------- Updated Record -------- \n";
         cout << "Enter new record for update: " << endl; // if directly it is shown it would change the already provided data
@@ -418,9 +494,6 @@ void updateRecord(string name)
         int Total_Tickets;
         Total_Tickets = Premium_Luxury + Business_Class + Executive + Economy;
         cout << "Total Tickets: " << Total_Tickets << endl;
-        int total_Price;
-        total_Price = (Premium_Luxury * Premium_Price + Business_Class * Business_Price + Executive * Executive_Price + Economy * Economy_Price);
-        cout << "Total Ticket Price: " << total_Price << endl;
         string Origin_Flight;
         cin.ignore();
         cout << "Origin Flight: ";
@@ -428,14 +501,10 @@ void updateRecord(string name)
         string Destination_Flight;
         cout << "Destination Flight: ";
         getline(cin, Destination_Flight);
-        string Duration;
-        cout << "Duration: ";
-        getline(cin, Duration);
         string contactInfo;
         cout << "contactInfo: ";
         cin.ignore();
         getline(cin, contactInfo);
-
         nameArray[foundpassengerCount] = name; // now we have to make changes in the found passengerCount
         CNIC_No_array[foundpassengerCount] = CNIC_No;
         Origin_Flight_array[foundpassengerCount] = Origin_Flight;
@@ -445,84 +514,133 @@ void updateRecord(string name)
         Business_Class_array[foundpassengerCount] = Business_Class;
         Executive_array[foundpassengerCount] = Executive;
         Economy_array[foundpassengerCount] = Economy;
-        Duration_array[foundpassengerCount] = Duration;
         contactInfo_array[foundpassengerCount] = contactInfo;
         cout << "Record updated. \n";
-        updateUserToFile();
+        addToFile(foundpassengerCount, name, CNIC_No, Total_Tickets, Premium_Luxury, Business_Class, Executive, Economy, Origin_Flight, Destination_Flight, contactInfo);
     }
     else
     {
         cout << "Record not found " << endl;
     }
+    myfile.close();
 }
-
-void updateUserToFile(int foundpassengerCount,string username, string password)
-{
-    fstream myFile;
-    myFile.open("Project.txt", ios::out);
-    username[foundpassengerCount] = stoi(username);
-    password[foundpassengerCount] = stoi (password);
-    string record[Total_Passengers];
-    for (int i = 0; i < passengerCount; i++)
-    {
-        string userRecord[i] = username[i] + "," + password [i];
-        myFile << userRecord[i];
-    }
-    myFile.close();
-}
-
 // Generate List
 void generateList()
 {
+    string passenger;
     fstream myfile;
-    myfile.open("Project.txt", ios::out);
-    for (int i = 0; i < passengerCount; i++)
+    int index = 0;
+    myfile.open("PassengerMenuRecord.txt", ios::in);
+    while (getline(myfile, passenger))
+    {
+        if (passenger.empty())
+        {
+            continue;
+        }
+        nameArray[index] = getField(passenger, 1);
+        CNIC_No_array[index] = getField(passenger, 2);
+        Total_Tickets_array[index] = stoi(getField(passenger, 3));
+        Premium_Luxury_array[index] = stoi(getField(passenger, 4));
+        Business_Class_array[index] = stoi(getField(passenger, 5));
+        Executive_array[index] = stoi(getField(passenger, 6));
+        Economy_array[index] = stoi(getField(passenger, 7));
+        Origin_Flight_array[index] = getField(passenger, 8);
+        Destination_Flight_array[index] = getField(passenger, 9);
+        contactInfo_array[index] = getField(passenger, 10);
+        index++;
+    }
+    int recordCount = index;
+    for (int i = 0; i < recordCount; i++)
     { // outer loop remains same
-        for (int j = i + 1; j < passengerCount; j++)
+        for (int j = i + 1; j < recordCount; j++)
         { // inner loop first runs complete
             if (nameArray[i] > nameArray[j])
             { // when i=0 it does comparison with all values
-
-                // i > j shows alphabetical normal order where i < j shows data from Z to A
-                // whenever it [j] gets greater value than that of the passengerCount 0 , we swap it
-                // swap operation                           temp is temporary variable && temp=i , i=j ,j=i
-
                 //  Swapping of name
-                string temp = nameArray[i];
-                nameArray[i] = nameArray[j];
-                nameArray[j] = temp;
-
-                float tempTicket_array = Total_Tickets_array[i];
+                string temp = nameArray[i];// i > j shows alphabetical normal order where i < j shows data from Z to A
+                nameArray[i] = nameArray[j];// whenever it [j] gets greater value than that of the passengerCount 0 , we swap it
+                nameArray[j] = temp; //   temp is temporary variable && temp=i , i=j ,j=i
+                // Swapping of CNIC
+                string tempCNIC = CNIC_No_array[i];
+                CNIC_No_array[i] = CNIC_No_array[j];
+                CNIC_No_array[j] = tempCNIC;
+                // Swapping of Tickets
+                int tempTicket_array = Total_Tickets_array[i];
                 Total_Tickets_array[i] = Total_Tickets_array[j];
                 Total_Tickets_array[j] = tempTicket_array;
-
+                // Swapping of Premium
+                int tempPremium = Premium_Luxury_array[i];
+                Premium_Luxury_array[i] = Premium_Luxury_array[j];
+                Premium_Luxury_array[j] = tempPremium;
+                //Swapping of business
+                int tempBusiness = Business_Class_array[i];
+                Business_Class_array[i] = Business_Class_array[j];
+                Business_Class_array[j] = tempBusiness;
+                //Swapping of executive
+                int tempExecutive = Executive_array[i];
+                Executive_array[i] = Executive_array[j];
+                Executive_array[j] = tempExecutive;
+                // Swapping of economy
+                int tempEconomy = Economy_array[i];
+                Economy_array[i] = Economy_array[j];
+                Economy_array[j] = tempEconomy;
                 // Swapping of origin
                 string tempFlight_Origin = Origin_Flight_array[i];
                 Origin_Flight_array[i] = Origin_Flight_array[j];
                 Origin_Flight_array[j] = tempFlight_Origin;
-
                 // Swapping of destination
                 string temp_Destination = Destination_Flight_array[i];
                 Destination_Flight_array[i] = Destination_Flight_array[j];
                 Destination_Flight_array[j] = temp_Destination;
-
-                // Swapping of Duration
-                string temp_Duration = Duration_array[i];
-                Duration_array[i] = Duration_array[j];
-                Duration_array[j] = temp_Duration;
+                // Swapping of contactInfo
+                string temp_contact_info = contactInfo_array[i];
+                contactInfo_array[i] = contactInfo_array[j];
+                contactInfo_array[j] = temp_contact_info;
             }
         }
     }
     cout << "Sorted list is as follows: \n";
-    showAllPassengers();
+    cout << "Name \tCNIC No. \tTotal Tickets \tPremium Luxury \tBusiness Class \tExecutive \tEconomy\t Ticket Price  \tOrigin Flight \tDestination Flight\t Contact Info  \n";
+    for (int i = 0; i < recordCount; i++)
+    {
+        cout << nameArray[i] << "\t" << CNIC_No_array[i] << "\t" << Total_Tickets_array[i]
+             << "\t" << Premium_Luxury_array[i] << "\t" << Business_Class_array[i] << "\t" << Executive_array[i]
+             << "\t" << Economy_array[i] << "\t" << Origin_Flight_array[i] << "\t"
+             << Destination_Flight_array[i] << "\t" << contactInfo_array[i] << endl;
+    }
+    getch();
     myfile.close();
 }
-
 // Delete Record
 void deleteRecord(string name)
 {
+    string passenger;
     fstream myfile;
-    myfile.open("Project.txt", ios::app);
+    int index = 0;
+    myfile.open("PassengerMenuRecord.txt", ios::in);
+    while (getline(myfile, passenger))
+    {
+        if (passenger.empty())
+        {
+            continue;
+        }
+        nameArray[index] = getField(passenger, 1);
+        CNIC_No_array[index] = getField(passenger, 2);
+        string TotalTickets = getField(passenger, 3);
+        Total_Tickets_array[index] = stoi(TotalTickets);
+        string Premium = getField(passenger, 4);
+        Premium_Luxury_array[index] = stoi(Premium);
+        string Business = getField(passenger, 5);
+        Business_Class_array[index] = stoi(Business);
+        string executive = getField(passenger, 6);
+        Executive_array[index] = stoi(executive);
+        string economy = getField(passenger, 7);
+        Economy_array[index] = stoi(economy);
+        Origin_Flight_array[index] = getField(passenger, 8);
+        Destination_Flight_array[index] = getField(passenger, 9);
+        contactInfo_array[index] = getField(passenger, 10);
+        index++;
+    }
     bool found = false;
     int foundpassengerCount = -1;
     for (int i = 0; i < passengerCount; i++) // passengerCount contains all data being stored
@@ -535,18 +653,17 @@ void deleteRecord(string name)
     }
     if (found == true)
     {
-        nameArray[foundpassengerCount] = ""; // now we have to make changes in the found passengerCount
-        contactInfo_array[foundpassengerCount] = "";
-        CNIC_No_array[foundpassengerCount] = "";
-        Origin_Flight_array[foundpassengerCount] = "";
-        Destination_Flight_array[foundpassengerCount] = "";
-        Total_Tickets_array[foundpassengerCount] = 0;
-        Premium_Luxury_array[foundpassengerCount] = 0;
-        Business_Class_array[foundpassengerCount] = 0;
-        Executive_array[foundpassengerCount] = 0;
-        Economy_array[foundpassengerCount] = 0;
-        Duration_array[foundpassengerCount] = "";
-        contactInfo_array[foundpassengerCount] = "";
+        string passenger_name = ""; // now we have to make changes in the found passengerCount
+        string CNIC_No = "";
+        string Origin_Flight = "";
+        string Destination_Flight= "";
+        int Total_Tickets = 0;
+        int Premium_Luxury = 0;
+        int Business_Class = 0;
+        int Executive = 0;
+        int Economy = 0;
+        string contactInfo = "";
+        addToFile(foundpassengerCount, passenger_name, CNIC_No, Total_Tickets, Premium_Luxury, Business_Class, Executive, Economy, Origin_Flight, Destination_Flight, contactInfo);
         cout << "Record of " << name << " has been deleted " << endl;
     }
     else
@@ -574,12 +691,11 @@ void purchaseMenu()
     }
     cout << "Total tickets sold: " << total << endl;
 }
-
 void premiumAvailable()
 {
     int tickets_sold = 0;
     int tickets_available = 0;
-    for (int i = 0; i < TotalFlight_Tickets; i++)
+    for (int i = 0; i < passengerCount; i++)
     {
         tickets_sold = tickets_sold + Premium_Luxury_array[i];
     }
@@ -590,7 +706,7 @@ void businessAvailable()
 {
     int tickets_sold = 0;
     int tickets_available = 0;
-    for (int i = 0; i < TotalFlight_Tickets; i++)
+    for (int i = 0; i < passengerCount; i++)
     {
         tickets_sold = tickets_sold + Business_Class_array[i];
     }
@@ -601,7 +717,7 @@ void executiveAvailable()
 {
     int tickets_sold = 0;
     int tickets_available = 0;
-    for (int i = 0; i < TotalFlight_Tickets; i++)
+    for (int i = 0; i < passengerCount; i++)
     {
         tickets_sold = tickets_sold + Executive_array[i];
     }
@@ -612,16 +728,37 @@ void economyAvailable()
 {
     int tickets_sold = 0;
     int tickets_available = 0;
-    for (int i = 0; i < TotalFlight_Tickets; i++)
+    for (int i = 0; i < passengerCount; i++)
     {
         tickets_sold = tickets_sold + Economy_array[i];
     }
     tickets_available = Economy - tickets_sold;
     cout << "Total Economy seats available: " << tickets_available << endl;
 }
-
 void availableSlots(int available)
 {
+    string passenger;
+    fstream myfile;
+    int index = 0;
+    myfile.open("PassengerMenuRecord.txt", ios::in);
+    while (getline(myfile, passenger))
+    {
+        if (passenger.empty())
+        {
+            continue;
+        }
+        nameArray[index] = getField(passenger, 1);
+        CNIC_No_array[index] = getField(passenger, 2);
+        Total_Tickets_array[index] = stoi(getField(passenger, 3));
+        Premium_Luxury_array[index] = stoi(getField(passenger, 4));
+        Business_Class_array[index] = stoi(getField(passenger, 5));
+        Executive_array[index] = stoi(getField(passenger, 6));
+        Economy_array[index] = stoi(getField(passenger, 7));
+        Origin_Flight_array[index] = getField(passenger, 8);
+        Destination_Flight_array[index] = getField(passenger, 9);
+        contactInfo_array[index] = getField(passenger, 10);
+        index++;
+    }
     clearScreen();
     int total_Sold = 0;
     for (int i = 0; i < passengerCount; i++)
@@ -635,13 +772,10 @@ void availableSlots(int available)
     executiveAvailable();
     economyAvailable();
     cout << "Total Tickets Sold: " << total_Sold << endl;
+    myfile.close();
 }
 void clearScreen()
 {
-    fstream myfile;
-    myfile.open("Project.txt", ios::out);
     system("cls");
-    myfile.close();
 }
-
 // Function End
